@@ -1,0 +1,48 @@
+{
+  "name": "breeze-mcp",
+  "version": "0.1.8",
+  "description": "The internet access layer for AI agents. Route AI requests through residential IPs in 248 countries.",
+  "main": "dist/index.js",
+  "bin": {
+    "breeze-mcp": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx src/index.ts",
+    "start": "node dist/index.js",
+    "test": "node test-server.js",
+    "prepare": "npm run build"
+  },
+  "keywords": [
+    "mcp",
+    "proxy",
+    "residential-proxy",
+    "web-scraping",
+    "ai-agent",
+    "breezemcp",
+    "web-access"
+  ],
+  "author": "Breeze",
+  "homepage": "https://breezemcp.xyz",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/breezemcp/breeze-mcp"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.5.0",
+    "node-fetch": "^2.7.0",
+    "node-html-markdown": "^1.3.0",
+    "cheerio": "^1.0.0-rc.12"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@types/node-fetch": "^2.6.4",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "type": "module"
+}
