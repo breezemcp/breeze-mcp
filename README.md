@@ -1,129 +1,161 @@
 # Breeze MCP
 
-The internet access layer for AI agents. Route AI requests through residential IPs in 248 countries.
+> Breeze through the web — the internet access layer for AI agents.
 
-## Features
+AI agents need to access the web but get blocked by anti-bot systems, rate limits, and geo-restrictions. Breeze routes requests through residential IPs in **248 countries**.
 
-- **Residential Proxy Network**: Access the web through real residential IPs
-- **Global Coverage**: 248+ countries and regions available
-- **Anti-Bot Bypass**: Circumvent captchas, rate limits, and geo-restrictions
-- **Multiple Formats**: Get content as markdown, text, or raw HTML
-- **Account Management**: Free tier with optional API key for more requests
-
-## Installation
-
-```bash
-npm install breeze-mcp
-```
+No captchas. No blocks. Just data.
 
 ## Quick Start
 
-1. **Install the package**:
-   ```bash
-   npm install breeze-mcp
-   ```
-
-2. **Get a free API key** (optional, for more requests):
-   ```json
-   {
-     "tool": "breeze_signup",
-     "arguments": {
-       "email": "your@email.com"
-     }
-   }
-   ```
-
-3. **Set your API key** (if you got one):
-   ```bash
-   export BREEZE_API_KEY="bz_your_generated_key"
-   ```
-
-4. **Start using the tools**:
-   ```json
-   {
-     "tool": "proxy_fetch",
-     "arguments": {
-       "url": "https://example.com",
-       "country": "US",
-       "format": "markdown"
-     }
-   }
-   ```
-
-## Available Tools
-
-### Core Proxy Tools
-
-- **`proxy_fetch`**: Fetch any URL through residential proxies
-- **`proxy_search`**: Search Google with geo-targeting
-- **`proxy_batch`**: Fetch multiple URLs in parallel
-- **`proxy_geocheck`**: Verify proxy location and IP
-- **`proxy_screenshot`**: Take screenshots of web pages
-- **`proxy_session`**: Create sticky sessions for consistent browsing
-
-### Account Management
-
-- **`breeze_signup`**: Create a free account (100 requests/day)
-- **`breeze_usage`**: Check your usage and remaining quota
-- **`breeze_topup`**: Get payment links for plan upgrades
-- **`breeze_plans`**: View available plans and pricing
-
-## Configuration
-
-You can customize the gateway URL if needed:
-
-```bash
-export BREEZE_GATEWAY_URL="https://api.breezemcp.xyz/v1"
-```
-
-## Usage Modes
-
-- **Anonymous Mode**: No configuration needed, limited requests
-- **API Key Mode**: Sign up for more requests and better rate limits
-
-## Examples
-
-### Fetch a webpage
+Add to your Claude Desktop config (`~/Library/Application Support/Claude/claude_desktop_config.json`):
 
 ```json
 {
-  "tool": "proxy_fetch",
-  "arguments": {
-    "url": "https://news.ycombinator.com",
-    "country": "US",
-    "format": "markdown"
+  "mcpServers": {
+    "breeze-mcp": {
+      "command": "npx",
+      "args": ["-y", "breeze-mcp"]
+    }
   }
 }
 ```
 
-### Search Google from Japan
+Restart Claude Desktop. That's it — **10MB free bandwidth, no signup required.**
+
+Want more? Run `breeze_signup` in Claude to get **50MB free**.
+
+## Setup with API Key
+
+After running `breeze_signup`, add your key to the config:
 
 ```json
 {
-  "tool": "proxy_search",
-  "arguments": {
-    "query": "best ramen Tokyo",
-    "country": "JP",
-    "num_results": 10
+  "mcpServers": {
+    "breeze-mcp": {
+      "command": "npx",
+      "args": ["-y", "breeze-mcp"],
+      "env": {
+        "BREEZE_API_KEY": "bz_your_api_key"
+      }
+    }
   }
 }
 ```
 
-### Check account usage
+## Cursor / Windsurf
+
+Same config format. Add to your MCP settings:
 
 ```json
 {
-  "tool": "breeze_usage",
-  "arguments": {}
+  "mcpServers": {
+    "breeze-mcp": {
+      "command": "npx",
+      "args": ["-y", "breeze-mcp"],
+      "env": {
+        "BREEZE_API_KEY": "bz_your_api_key"
+      }
+    }
+  }
 }
 ```
 
-## Support
+## Tools
 
-- 🌐 **Website**: [breezemcp.xyz](https://breezemcp.xyz)
-- 📧 **Email**: Support available through website
-- 🐛 **Issues**: Report on GitHub
+### `breeze_fetch`
+Fetch any URL through residential IPs. Returns clean content.
+
+```
+"Fetch https://example.com using a US IP"
+"Get the content of this page from Japan"
+```
+
+Parameters:
+- `url` (required) — URL to fetch
+- `country` — 2-letter country code (US, JP, DE, etc.)
+- `region` — State/city for precise targeting
+- `format` — `markdown` (default), `text`, or `raw`
+
+### `breeze_search`
+Search Google without captchas or blocks.
+
+```
+"Search Google for 'best AI tools 2026' from the US"
+```
+
+Parameters:
+- `query` (required) — Search query
+- `country` — Country for localized results
+- `num_results` — Number of results (default: 5)
+
+### `breeze_batch`
+Fetch multiple URLs at once, each with a different IP.
+
+```
+"Fetch these 5 competitor pages and compare their pricing"
+```
+
+Parameters:
+- `urls` (required) — Array of URLs
+- `country` — Country for all requests
+
+### `breeze_geocheck`
+Verify the IP address and location for a country.
+
+```
+"Check what IP I get from Germany"
+```
+
+### `breeze_signup`
+Create a free account for 50MB bandwidth (vs 10MB anonymous).
+
+```
+"Sign me up for Breeze"
+"Create a Breeze account with my email hello@example.com"
+```
+
+### `breeze_usage`
+Check your remaining bandwidth and usage stats.
+
+```
+"How much Breeze bandwidth do I have left?"
+```
+
+### `breeze_plans`
+View available plans and pricing.
+
+## Quota
+
+| Tier | Bandwidth | Requirement |
+|------|-----------|-------------|
+| Anonymous | 10 MB | None — just use it |
+| Free | 50 MB | Run `breeze_signup` |
+| Paid | Coming soon | Open beta |
+
+Bandwidth is measured by response size. A typical webpage is 50-200 KB, so 10 MB ≈ 50-200 pages.
+
+## Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `BREEZE_API_KEY` | Your API key from `breeze_signup` | None (anonymous mode) |
+| `BREEZE_GATEWAY_URL` | Custom gateway URL | `https://api.breezemcp.xyz/v1` |
+
+## How It Works
+
+```
+Your AI → Breeze MCP → Breeze Gateway → Residential IP → Target Website
+```
+
+All requests are routed through real residential IPs. Your AI sees the web exactly as a human user would from that location.
+
+## Links
+
+- Website: [breezemcp.xyz](https://breezemcp.xyz)
+- GitHub: [github.com/breezemcp](https://github.com/breezemcp)
+- npm: [npmjs.com/package/breeze-mcp](https://www.npmjs.com/package/breeze-mcp)
 
 ## License
 
-MIT License - see LICENSE file for details.
+MIT
