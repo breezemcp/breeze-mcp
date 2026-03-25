@@ -1,18 +1,28 @@
 import { ProxyConfig } from './types.js';
+import { readFileSync, existsSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 
 export function getConfig(): ProxyConfig {
-  const apiKey = process.env.BREEZE_API_KEY || undefined;
+  let apiKey = process.env.BREEZE_API_KEY || undefined;
   const gatewayUrl = process.env.BREEZE_GATEWAY_URL || 'https://api.breezemcp.xyz/v1';
 
-  // Debug: log to stderr (won't interfere with MCP stdio)
-  if (apiKey) {
-    console.error(`[breeze] API key configured: ${apiKey.substring(0, 6)}...`);
-  } else {
-    console.error('[breeze] No API key - running in anonymous mode (10MB free)');
+  // Fallback: read from ~/.breeze/config.json
+  if (!apiKey) {
+    try {
+      const configPath = join(homedir(), '.breeze', 'config.json');
+      if (existsSync(configPath)) {
+        const config = JSON.parse(readFileSync(configPath, 'utf-8'));
+        apiKey = config.apiKey || config.api_key || undefined;
+      }
+    } catch {}
   }
 
-  return {
-    apiKey,
-    gatewayUrl
-  };
+  if (apiKey) {
+    console.error(`[breeze] API key: ${apiKey.substring(0, 6)}...`);
+  } else {
+    console.error('[breeze] Anonymous mode (10MB free). Run breeze_signup for 50MB.');
+  }
+
+  return { apiKey, gatewayUrl };
 }

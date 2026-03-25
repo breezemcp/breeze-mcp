@@ -1,6 +1,6 @@
 {
   "name": "breeze-mcp",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "The internet access layer for AI agents. Route AI requests through residential IPs in 248 countries.",
   "main": "dist/index.js",
   "bin": {
